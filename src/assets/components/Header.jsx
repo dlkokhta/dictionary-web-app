@@ -34,7 +34,7 @@ const Header = (props) => {
         <div className="flex gap-4">
           {/*arrow-down svg */}
           <div className="flex items-center gap-4">
-            <h1>Mono</h1>
+            <h1 className="text-white">Mono</h1>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="14"
@@ -77,7 +77,7 @@ const Header = (props) => {
             >
               <path
                 fill="none"
-                stroke="#838383"
+                stroke="#A445ED"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="1.5"

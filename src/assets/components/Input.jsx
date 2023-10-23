@@ -6,16 +6,38 @@ const Input = () => {
   const [entireInput, setEntireInput] = useState("");
 
   const [data, setData] = useState([]);
+
+  console.log("data", data);
+  // console.log(entireInput.indexOf());
+  const audioUrl = data
+    .map((p) => p.phonetics.map((ph) => ph.audio))
+    .flat()
+    .filter((audioUrl) => audioUrl);
+
+  const specificAudioUrl =
+    "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3";
+
+  const index = audioUrl.indexOf(specificAudioUrl);
+
+  console.log("audioUrls", audioUrl.indexOf());
+
+  // console.log(
+  //   "word",
+  //   data.map((w) => w.word.indexOf())
+  // );
+
+  // console.log(data.map((d) => d.partOfSpeech.map((p) => p.text)));
+
   // const fetch = data.map((meaning) =>
   //   meaning.meanings.map((data) => data.definitions)
   // );
 
   // console.log(fetch);
 
-  const speech = data.map((sp) => sp.meanings.map((sp) => sp.partOfSpeech));
+  // const speech = data.map((sp) => sp.meanings.map((sp) => sp.partOfSpeech));
 
-  const test = speech.map((sp, index) => sp);
-  console.log(test);
+  // const test = speech.map((sp, index) => sp);
+  // console.log(test);
   // const test = data.map((meaning) => meaning.meanings.map((data) => data));
 
   // console.log(test);
@@ -51,9 +73,33 @@ const Input = () => {
 
   useEffect(() => {
     if (entireInput.length) {
-      fetchData(entireInput);
+      fetchData();
     }
   }, [entireInput]);
+
+  const wordData = data.map((w) => w.word);
+
+  const audioUrls = data.map((p) =>
+    p.phonetics
+      .map((ph) => ph.audio)
+      .flat()
+      .filter((audioUrl) => audioUrl)
+  );
+
+  // {
+  //   /**ეს მუშაობს */
+  // }
+  const handlePlayAudio = (index) => {
+    if (0 >= 0 && 0 < audioUrls.length) {
+      const audioUrl = audioUrls[index][0]; // Use the first audio source
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        audio.play();
+      } else {
+        console.error("No audio URL found for the selected word.");
+      }
+    }
+  };
 
   return (
     <div>
@@ -64,8 +110,8 @@ const Input = () => {
             onKeyDown={keyDownHandler}
             value={input}
             type="text "
-            className="text-white w-full outline-none  placeholder-white bg-transparent mr-3 ml-3"
-            placeholder=" keyboard "
+            className=" text-white w-full outline-none  placeholder-gray bg-transparent mr-3 ml-3"
+            placeholder=" Find some word "
           />
 
           <svg
@@ -91,17 +137,34 @@ const Input = () => {
       {/**result */}
       <div>
         {/**play container */}
-        <div className="flex justify-between mt-7">
+        <div className="flex justify-between items-center mt-7">
           <div className="flex flex-col gap-2">
-            <h1 className="text-white text-lg text-[32px]">{entireInput}</h1>
-            <h1 className="text-[#A445ED]">/ˈkiːbɔːd/</h1>
+            <h1 className="text-white text-[32px] font-bold">{entireInput}</h1>
+            <h1>
+              {data.map((pho) => (
+                <div className="text-[#A445ED] font-regular font-[18px]">
+                  {pho.phonetic}
+                </div>
+              ))}
+            </h1>
           </div>
+
+          {/* {data.map((p) =>
+            p.phonetics.map((ph, index) => (
+              <div key={index}>
+                <h1>ph.word</h1>
+              </div>
+            ))
+          )} */}
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="75"
-            height="75"
+            width="48"
+            height="48"
             viewBox="0 0 75 75"
+            onClick={() =>
+              handlePlayAudio(wordData.indexOf(entireInput.toLowerCase()))
+            }
           >
             <g fill="#A445ED" fill-rule="evenodd">
               <circle cx="37.5" cy="37.5" r="37.5" opacity=".25" />
@@ -112,30 +175,91 @@ const Input = () => {
 
         {/**noun container */}
 
-        {test.map((sp, index) => (
+        {/* {test.map((sp, index) => (
           <div className="flex flex-row items-center gap-[25px] mt-8">
             <h1 key={index} className="text-white">
               {sp}
             </h1>
             <div className="h-[0.5px] w-full bg-white"></div>
           </div>
-        ))}
+        ))} */}
 
         {/**meaning container */}
         <div className="mt-8">
-          <h1 className="text-[#757575] text-[16px]">Meaning</h1>
           <div className="text-white">
             {data.map((meaning) =>
-              meaning.meanings.map((data) =>
-                data.definitions.map((def, index) => (
-                  <div>
-                    <li key={index} className="text-white">
-                      {def.definition}
-                    </li>
+              meaning.meanings.map((meanings) => (
+                <>
+                  {/**partOfSpeech */}
+                  <div className="flex flex-row items-center gap-[25px] mt-8">
+                    <div className="font-bold">{meanings.partOfSpeech}</div>
+                    <div className="h-[0.5px] w-full bg-[#3A3A3A]"></div>
                   </div>
-                ))
-              )
+
+                  <h1 className="text-[#757575] text-[16px] mt-[35px] mb-[17px] font-normal">
+                    Meaning
+                  </h1>
+
+                  {meanings.definitions.map((def, index) => (
+                    <div>
+                      <li key={index} className="font-normal text-[15px]">
+                        {def.definition}
+                        {def.example && def.example.trim() !== "" && (
+                          <div
+                            style={{ color: "#757575" }}
+                            className="text-[15px] ml-6 mt-4"
+                          >
+                            {'"' + def.example + '"'}
+                          </div>
+                        )}
+                      </li>
+                    </div>
+                  ))}
+
+                  {/**synonym */}
+                  <div className="flex gap-6 mt-6">
+                    {meanings.synonyms.length > 0 && (
+                      <h1 className="text-[#757575] text-[16px]">Synonym</h1>
+                    )}
+                    <div className="text-[#A445ED] flex flex-row-reverse font-bold">
+                      {meanings.synonyms}
+                    </div>
+                  </div>
+                </>
+              ))
             )}
+
+            {/**source URL */}
+
+            <div className="h-[0.5px] w-full bg-[#3A3A3A]"></div>
+            <div>
+              <div className="text-white">
+                <h1
+                  className="text-[#757575] mt-8 font-normal"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Source
+                </h1>
+                <div className="flex items-center gap-2">
+                  {data.map((source) => source.sourceUrls)}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      fill="none"
+                      stroke="#838383"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M6.09 3.545H2.456A1.455 1.455 0 0 0 1 5v6.545A1.455 1.455 0 0 0 2.455 13H9a1.455 1.455 0 0 0 1.455-1.455V7.91m-5.091.727 7.272-7.272m0 0H9m3.636 0V5"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
             {/* {data.map((meaning) =>
               meaning.meanings.map((data) =>

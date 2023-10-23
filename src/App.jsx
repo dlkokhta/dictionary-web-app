@@ -12,7 +12,10 @@ function App() {
     // console.log("event", event);
   };
   return (
-    <div className={bgChange ? "bg-white" : "bg-black"}>
+    <div
+      className={bgChange ? "bg-white" : "bg-black"}
+      style={{ fontFamily: "IncInteronsolata" }}
+    >
       <div className=" border border-red-500 flex flex-col pt-[24px] pr-[24px] pb-[63px] pl-[24px]">
         <Header onChangeBg={bgChnageHandler} />
 
