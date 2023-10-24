@@ -36,7 +36,7 @@ function App() {
   };
   return (
     <div
-      className={bgChange ? "bg-white" : "bg-black"}
+      className={bgChange ? "bg-white duration-500" : "bg-black duration-500"}
       style={{
         fontFamily: mono
           ? "Inconsolata"
@@ -47,7 +47,7 @@ function App() {
           : "",
       }}
     >
-      <div className=" border border-red-500 flex flex-col pt-[24px] pr-[24px] pb-[63px] pl-[24px]">
+      <div className="xl:pl-[352px] xl:pr-[352px] md:pt-[58px] md:pr-[40px] md:pb-[118px] md:pl-[40px]  flex flex-col pt-[24px] pr-[24px] pb-[63px] pl-[24px]">
         <Header
           onChangeBg={bgChnageHandler}
           onMonoClick={handleMonoClick}

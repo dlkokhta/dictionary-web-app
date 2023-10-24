@@ -37,13 +37,12 @@ const Header = (props) => {
   return (
     <>
       {/*main container*/}
-      <div className="flex flex-row justify-between ">
+      <div className="flex flex-row justify-between  ">
         {/*logo svg */}
         <div>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="34"
-            height="38"
+            className="w-[28px] h-[32px] md:w-[32px] md:h-[36px]
+            xmlns="
             viewBox="0 0 34 38"
           >
             <g
@@ -89,7 +88,7 @@ const Header = (props) => {
               </div>
             )}
             <h1
-              className={`font-bold ${
+              className={`md:text-[18px] font-bold ${
                 changeTheme ? "text-black" : "text-white"
               }  text-[14px] leading-6`}
             >
