@@ -1,25 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const Input = () => {
+const Input = (props) => {
   const [input, setInput] = useState("");
-  const [entireInput, setEntireInput] = useState("");
+  const [entireInput, setEntireInput] = useState("keyboard");
 
   const [data, setData] = useState([]);
 
-  console.log("data", data);
+  // console.log("data", data);
   // console.log(entireInput.indexOf());
-  const audioUrl = data
-    .map((p) => p.phonetics.map((ph) => ph.audio))
-    .flat()
-    .filter((audioUrl) => audioUrl);
+  // const audioUrl = data
+  //   .map((p) => p.phonetics.map((ph) => ph.audio))
+  //   .flat()
+  //   .filter((audioUrl) => audioUrl);
 
-  const specificAudioUrl =
-    "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3";
+  // const specificAudioUrl =
+  //   "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3";
 
-  const index = audioUrl.indexOf(specificAudioUrl);
+  // const index = audioUrl.indexOf(specificAudioUrl);
 
-  console.log("audioUrls", audioUrl.indexOf());
+  // console.log("audioUrls", audioUrl.indexOf());
 
   // console.log(
   //   "word",
@@ -86,12 +86,9 @@ const Input = () => {
       .filter((audioUrl) => audioUrl)
   );
 
-  // {
-  //   /**ეს მუშაობს */
-  // }
   const handlePlayAudio = (index) => {
     if (0 >= 0 && 0 < audioUrls.length) {
-      const audioUrl = audioUrls[index][0]; // Use the first audio source
+      const audioUrl = audioUrls[index][0];
       if (audioUrl) {
         const audio = new Audio(audioUrl);
         audio.play();
@@ -104,7 +101,11 @@ const Input = () => {
   return (
     <div>
       <div className="mt-[24px] ">
-        <div className="flex items-center  rounded-xl  justify-between w-full h-12 bg-[#1F1F1F]">
+        <div
+          className={`${
+            props.bgChange ? "bg-[#F4F4F4]" : "bg-[#1F1F1F]"
+          } flex items-center  rounded-xl  justify-between w-full h-12 `}
+        >
           <input
             onChange={inputChangeHandler}
             onKeyDown={keyDownHandler}
@@ -139,7 +140,13 @@ const Input = () => {
         {/**play container */}
         <div className="flex justify-between items-center mt-7">
           <div className="flex flex-col gap-2">
-            <h1 className="text-white text-[32px] font-bold">{entireInput}</h1>
+            <h1
+              className={`${
+                props.bgChange ? "text-black" : "text-white"
+              } text-[32px] font-bold`}
+            >
+              {entireInput}
+            </h1>
             <h1>
               {data.map((pho) => (
                 <div className="text-[#A445ED] font-regular font-[18px]">
@@ -192,7 +199,13 @@ const Input = () => {
                 <>
                   {/**partOfSpeech */}
                   <div className="flex flex-row items-center gap-[25px] mt-8">
-                    <div className="font-bold">{meanings.partOfSpeech}</div>
+                    <div
+                      className={`${
+                        props.bgChange ? "text-black" : "text-white"
+                      } text-[32px] font-bold`}
+                    >
+                      {meanings.partOfSpeech}
+                    </div>
                     <div className="h-[0.5px] w-full bg-[#3A3A3A]"></div>
                   </div>
 
@@ -201,7 +214,11 @@ const Input = () => {
                   </h1>
 
                   {meanings.definitions.map((def, index) => (
-                    <div>
+                    <div
+                      className={`${
+                        props.bgChange ? "text-black" : "text-white"
+                      } `}
+                    >
                       <li key={index} className="font-normal text-[15px]">
                         {def.definition}
                         {def.example && def.example.trim() !== "" && (
