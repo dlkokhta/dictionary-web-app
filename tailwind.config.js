@@ -9,7 +9,7 @@ export default {
     fontFamily: {
       Inconsolata: ["monospace"],
       Inter: ["sans-serif"],
-      Lora: ["serif"],
+      Lora: ["monospace"],
 
       // spartan: ["Spartan", "sans-serif"],
     },

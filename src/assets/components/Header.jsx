@@ -30,9 +30,9 @@ const Header = (props) => {
     props.onSansSerifClick();
   };
 
-  setTimeout(() => {
-    setFontMenu(false);
-  }, 10000);
+  // setTimeout(() => {
+  //   setFontMenu(false);
+  // }, 10000);
 
   return (
     <>
@@ -66,7 +66,7 @@ const Header = (props) => {
           >
             {/**font menu */}
             {fontMenu && (
-              <div className="absolute shadow-[0px_5px_30px_#A445ED;]  rounded-2xl bg-[#1F1F1F] top-[60px] left-[100px] flex flex-col gap-2 pt-5 pr-14 pb-6 pl-6 ">
+              <div className="xl:ml-[730px] md:ml-[370px] md:mt-[40px] absolute shadow-[0px_5px_30px_#A445ED;]  rounded-2xl bg-[#1F1F1F] top-[60px] left-[100px] flex flex-col gap-2 pt-5 pr-14 pb-6 pl-6 ">
                 <div
                   className="font-bold text-white text-[14px] leading-6  "
                   onClick={monoHandler}
