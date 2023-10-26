@@ -132,7 +132,9 @@ const Input = (props) => {
             onKeyDown={keyDownHandler}
             value={input}
             type="text "
-            className="md:text-[20px] text-white w-full outline-none  placeholder-gray bg-transparent mr-3 ml-3"
+            className={`md:text-[20px] ${
+              props.bgChange ? "text-black" : "text-white"
+            } w-full outline-none  placeholder-gray bg-transparent mr-3 ml-3`}
             placeholder=" Find some word "
           />
 

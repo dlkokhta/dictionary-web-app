@@ -36,7 +36,11 @@ function App() {
   };
   return (
     <div
-      className={bgChange ? "bg-white duration-500" : "bg-black duration-500"}
+      className={
+        bgChange
+          ? "bg-white duration-500"
+          : "bg-black min-h-screen duration-500"
+      }
       style={{
         fontFamily: mono
           ? "Inconsolata"
