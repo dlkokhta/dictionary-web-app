@@ -1,104 +1,60 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import icon from "../images/icon.png";
 const Input = (props) => {
   const [input, setInput] = useState("");
-  const [entireInput, setEntireInput] = useState("");
-  const [playIcon, setPlayIcon] = useState(false);
+
   const [inputIsEmpty, setInputIEmpty] = useState(false);
-
+  const [wordNotExist, setWordNotExist] = useState(null);
   const [data, setData] = useState([]);
-
-  // console.log("data", data);
-  // console.log(entireInput.indexOf());
-  // const audioUrl = data
-  //   .map((p) => p.phonetics.map((ph) => ph.audio))
-  //   .flat()
-  //   .filter((audioUrl) => audioUrl);
-
-  // const specificAudioUrl =
-  //   "https://api.dictionaryapi.dev/media/pronunciations/en/hello-au.mp3";
-
-  // const index = audioUrl.indexOf(specificAudioUrl);
-
-  // console.log("audioUrls", audioUrl.indexOf());
-
-  // console.log(
-  //   "word",
-  //   data.map((w) => w.word.indexOf())
-  // );
-
-  // console.log(data.map((d) => d.partOfSpeech.map((p) => p.text)));
-
-  // const fetch = data.map((meaning) =>
-  //   meaning.meanings.map((data) => data.definitions)
-  // );
-
-  // console.log(fetch);
-
-  // const speech = data.map((sp) => sp.meanings.map((sp) => sp.partOfSpeech));
-
-  // const test = speech.map((sp, index) => sp);
-  // console.log(test);
-  // const test = data.map((meaning) => meaning.meanings.map((data) => data));
-
-  // console.log(test);
-
-  // console.log(data[0].meanings[1]);
+  console.log("data", data);
 
   const inputChangeHandler = (event) => {
     setInput(event.target.value);
-    // if (input.trim() === "") {
-    //   setIsEmpty(true);
-    // }
+  };
+
+  const fetchData = async () => {
+    try {
+      const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${input}`;
+
+      const response = await axios.get(url);
+      setData(response.data);
+      setInput("");
+      setWordNotExist(false);
+    } catch (error) {
+      setWordNotExist(true);
+      setData([]);
+    }
   };
 
   const submitHandler = () => {
-    setEntireInput(input);
-    setInput("");
+    fetchData();
+
     if (input.trim() === "") {
       setInputIEmpty(true);
-      setPlayIcon(false);
     }
     if (input.trim() !== "") {
       setInputIEmpty(false);
-      setPlayIcon(true);
     }
   };
 
   const keyDownHandler = (event) => {
     if (event.key === "Enter") {
-      setEntireInput(input);
-      setInput("");
+      fetchData();
+
       if (input.trim() === "") {
         setInputIEmpty(true);
-        setPlayIcon(false);
       }
       if (input.trim() !== "") {
         setInputIEmpty(false);
-        setPlayIcon(true);
       }
     }
   };
 
-  const fetchData = async () => {
-    try {
-      const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${entireInput}`;
-
-      const response = await axios.get(url);
-      setData(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (entireInput.length) {
-      fetchData();
-    }
-  }, [entireInput]);
-
   const wordData = data.map((w) => w.word);
+  const wordShow = wordData.find((word) =>
+    word.toLowerCase().includes(input.toLocaleLowerCase())
+  );
 
   const audioUrls = data.map((p) =>
     p.phonetics
@@ -149,15 +105,28 @@ const Input = (props) => {
             <path
               fill="none"
               stroke="#A445ED"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
               d="m12.663 12.663 3.887 3.887M1 7.664a6.665 6.665 0 1 0 13.33 0 6.665 6.665 0 0 0-13.33 0Z"
             />
           </svg>
         </div>
         {inputIsEmpty && (
-          <div className=" text-red-600">"Whoops, can't be empty..."</div>
+          <div className=" text-red-500">Whoops, can't be empty...</div>
+        )}
+        {wordNotExist && !inputIsEmpty && (
+          <div className="flex flex-col items-center mt-32">
+            <img className="w-16 h-16 mb-10" src={icon} />
+            <div className="text-[#ffffff]  font-Inter font-bold text-base mb-6 leading-6">
+              No Definitions Found
+            </div>
+            <div className="text-[#757575] font-Inter font-normal text-lg leading-6 text-center">
+              Sorry pal, we couldn't find definitions for the word you were
+              looking for. You can try the search again at later time or head to
+              the web instead.
+            </div>
+          </div>
         )}
       </div>
 
@@ -171,7 +140,7 @@ const Input = (props) => {
                 props.bgChange ? "text-black" : "text-white"
               } text-[32px] font-bold md:text-[64px]`}
             >
-              {entireInput}
+              {wordShow}
             </h1>
             <h1>
               {data.map((pho) => (
@@ -182,22 +151,15 @@ const Input = (props) => {
             </h1>
           </div>
 
-          {/* {data.map((p) =>
-            p.phonetics.map((ph, index) => (
-              <div key={index}>
-                <h1>ph.word</h1>
-              </div>
-            ))
-          )} */}
           <div className=" hover:text-red-400">
-            {playIcon && (
+            {data.length > 0 && (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="48"
                 height="48"
                 viewBox="0 0 75 75"
                 onClick={() =>
-                  handlePlayAudio(wordData.indexOf(entireInput.toLowerCase()))
+                  handlePlayAudio(wordData.indexOf(input.toLowerCase()))
                 }
                 className="cursor-pointer md:w-[75px] md:h-[75px]"
               >
@@ -209,17 +171,6 @@ const Input = (props) => {
             )}
           </div>
         </div>
-
-        {/**noun container */}
-
-        {/* {test.map((sp, index) => (
-          <div className="flex flex-row items-center gap-[25px] mt-8">
-            <h1 key={index} className="text-white">
-              {sp}
-            </h1>
-            <div className="h-[0.5px] w-full bg-white"></div>
-          </div>
-        ))} */}
 
         {/**meaning container */}
         <div className="mt-8">
@@ -281,8 +232,10 @@ const Input = (props) => {
 
             {/**source URL */}
 
-            {playIcon && <div className="h-[0.5px] w-full bg-[#3A3A3A]"></div>}
-            {playIcon && (
+            {data.length > 0 && (
+              <div className="h-[0.5px] w-full bg-[#3A3A3A]"></div>
+            )}
+            {data.length > 0 && (
               <div>
                 <div className="text-white">
                   <h1
@@ -302,9 +255,9 @@ const Input = (props) => {
                       <path
                         fill="none"
                         stroke="#838383"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
                         d="M6.09 3.545H2.456A1.455 1.455 0 0 0 1 5v6.545A1.455 1.455 0 0 0 2.455 13H9a1.455 1.455 0 0 0 1.455-1.455V7.91m-5.091.727 7.272-7.272m0 0H9m3.636 0V5"
                       />
                     </svg>
@@ -312,21 +265,6 @@ const Input = (props) => {
                 </div>
               </div>
             )}
-
-            {/* {data.map((meaning) =>
-              meaning.meanings.map((data) =>
-                data.definitions.map((def) => (
-                  <div>
-                    <li
-                      className="text-white list-disc list-inside pl-5"
-                      style={{ "--tw-list-color": "red" }}
-                    >
-                      {def.definition}
-                    </li>
-                  </div>
-                ))
-              )
-            )} */}
           </div>
         </div>
       </div>
