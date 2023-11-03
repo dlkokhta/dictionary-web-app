@@ -118,7 +118,11 @@ const Input = (props) => {
         {wordNotExist && !inputIsEmpty && (
           <div className="flex flex-col items-center mt-32">
             <img className="w-16 h-16 mb-10" src={icon} />
-            <div className="text-[#ffffff]  font-Inter font-bold text-base mb-6 leading-6">
+            <div
+              className={`${
+                props.bgChange ? "text-black" : "text-white"
+              }   font-Inter font-bold text-base mb-6 leading-6`}
+            >
               No Definitions Found
             </div>
             <div className="text-[#757575] font-Inter font-normal text-lg leading-6 text-center">
